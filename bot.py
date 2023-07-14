@@ -23,8 +23,22 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+    if message.content.startswith('$hello' ,):
+        await message.reply('Hello!')
+
+    if message.content.startswith('$play'):
+        embedGame = discord.Embed(title="Tic Tac Toe", description="This bot was made by Uncle Moe", color=0x00ff00)
+        embedGame.add_field(name="Players", value="Player one: @test against Player two: @test2", inline=False)
+        embedGame.add_field(name="The Game", value=":green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:\n:green_square: :one: :green_square:I:green_square: :two: :green_square:I:green_square: :three: :green_square:\n:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:", inline=False)
+        embedGame.add_field(name="", value=":green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:\n:green_square: :four: :green_square:I:green_square: :five: :green_square:I:green_square: :six: :green_square:\n:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:", inline=False)
+        embedGame.add_field(name="", value=":green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:\n:green_square: :seven: :green_square:I:green_square: :eight: :green_square:I:green_square: :nine: :green_square:\n:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:I:green_square: :green_square: :green_square:", inline=False)        
+        msg = await message.channel.send(embed=embedGame)
+        emoji_numbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+        number_of_responses = 9
+        for counter in range(number_of_responses):
+            await msg.add_reaction(emoji_numbers[counter])
+        
+    
 
 
 
