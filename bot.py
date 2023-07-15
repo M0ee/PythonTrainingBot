@@ -1,30 +1,49 @@
 import discord
 import os
+from discord.ext import commands
 from dotenv import load_dotenv
 import logging
 import logging.handlers
 
 
+
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
+
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client(intents=intents)
 
+client = commands.Bot(command_prefix='>', intents=intents)
 
 
 @client.event
 async def on_ready():
+    activity = discord.Activity(name="To Moe", type=discord.ActivityType.listening)
+    await client.change_presence(status=discord.Status.idle, activity=activity)
     print(f'We have logged in as {client.user}')
+
+@client.command()
+async def add(ctx, left: int, right: int):
+    await ctx.send(left + right)
+
+@client.command()
+async def repeat(ctx, message: str):
+    await ctx.send(message)
+
+@client.command()
+async def play(ctx, message: str):
+    await ctx.send(message)
+
+
 
 @client.event
 async def on_message(message):
+    
     if message.author == client.user:
         return
-
-    if message.content.startswith('$hello' ,):
-        await message.reply('Hello!')
 
     if message.content.startswith('$play'):
         embedGame = discord.Embed(title="Tic Tac Toe", description="This bot was made by Uncle Moe", color=0x00ff00)
@@ -38,7 +57,9 @@ async def on_message(message):
         for counter in range(number_of_responses):
             await msg.add_reaction(emoji_numbers[counter])
         
-    
+    await client.process_commands(message)
+
+
 
 
 
