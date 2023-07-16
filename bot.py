@@ -4,40 +4,36 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import logging
 import logging.handlers
+import command_handler
+import reaction_handler
+#import tracemalloc
 
 
+#tracemalloc.start()
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
+intents.reactions = True
 
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+PREIFX= os.getenv('PREFIX')
 client = discord.Client(intents=intents)
 
-client = commands.Bot(command_prefix='>', intents=intents)
+client = commands.Bot(command_prefix=PREIFX, intents=intents, help_command=None)
 
 
 @client.event
 async def on_ready():
+    await command_handler.setup(client)
+    await reaction_handler.setup(client)
     activity = discord.Activity(name="To Moe", type=discord.ActivityType.listening)
     await client.change_presence(status=discord.Status.idle, activity=activity)
     print(f'We have logged in as {client.user}')
-
-@client.command()
-async def add(ctx, left: int, right: int):
-    await ctx.send(left + right)
-
-@client.command()
-async def repeat(ctx, message: str):
-    await ctx.send(message)
-
-@client.command()
-async def play(ctx, message: str):
-    await ctx.send(message)
-
-
+    
+    
 
 @client.event
 async def on_message(message):
@@ -77,5 +73,7 @@ dt_fmt = '%Y-%m-%d %H:%M:%S'
 formatter = logging.Formatter('[{asctime}] [{levelname:<8}] {name}: {message}', dt_fmt, style='{')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+
+
 
 client.run(TOKEN, log_handler=None)
